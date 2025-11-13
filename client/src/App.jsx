@@ -12,13 +12,13 @@ import ProfilePage from "./routes/profilePage/profilePage";
 import Login from "./routes/login/login.jsx";
 import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
-import NewPostPage from "./routes/newPostPage/newPostPage";
+// import NewPostPage from "./routes/newPostPage/newPostPage";
 import {
   listPageLoader,
   profilePageLoader,
   singlePageLoader,
 } from "./lib/loaders";
-import UpdatePostPage from "./routes/UpdatePostPage/UpdatePostPage.jsx";
+// import UpdatePostPage from "./routes/UpdatePostPage/UpdatePostPage.jsx";
 import ProprietaireHome from "./routes/homePageProprietaire/ProprietaireHome.jsx";
 // import AdminDashboard from "./routes/admin/AdminDashboard.jsx"; // new admin dashboard
 import Dashboard from "./routes/dashboard/Dashboard.jsx";

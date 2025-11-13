@@ -130,7 +130,8 @@ import apiRequest from "../../lib/apiRequest";
 import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 import { Suspense, useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import NewPostPage from "../newPostPage/NewPostPage";
+import NewPostPage from "../newPostPage/newPostPage";
+// import NewPostPage from "../newPostPage/NewPostPage";
 
 function ProfilePage() {
   const data = useLoaderData();

@@ -2,8 +2,9 @@ import { useContext, useState } from "react";
 import SearchBar from "../../components/searchBar/SearchBar";
 import { AuthContext } from "../../context/AuthContext";
 import "./homePage.scss";
-import NewPostPage from "../newPostPage/newPostPage";
+// import NewPostPage from "../newPostPage/newPostPage";
 import Portfolio from "../portfolio/portfolio";
+import NewPostPage from "../newPostPage/newPostPage";
 // import Portfolio from "../../components/portfolio/Portfolio";
 
 function ProprietaireHome() {
