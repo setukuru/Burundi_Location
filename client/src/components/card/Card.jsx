@@ -1,4 +1,4 @@
-import "./card.scss";
+import "./Card.scss";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
