@@ -1,10 +1,11 @@
 import "./listPage.scss";
 import Filter from "../../components/filter/Filter";
-import Card from "../../components/Card/Card";
+// import Card from "../../components/Card/Card";
 import Map from "../../components/map/Map";
 import { Await, useLoaderData, useSearchParams } from "react-router-dom";
 import { Suspense, useEffect, useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext"; // import auth context
+import Card from "../../components/card/Card";
 
 function ListPage() {
   const [filteredPosts, setFilteredPosts] = useState([]);
