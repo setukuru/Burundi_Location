@@ -13,29 +13,38 @@ import historiqueRoute from "./routes/historique.route.js";
 const app = express();
 
 const allowedOrigins = [
-  "http://localhost:5174",
   "https://burundi-location-maison1.onrender.com",
+  "https://burundi-location-1.onrender.com",
+  "https://burundi-location-3.onrender.com"
 ];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.log('Blocked by CORS:', origin);
+        callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
   })
 );
 
-// Handle preflight requests
-app.options("*", cors());
+// Handle preflight requests properly
+app.options('*', cors());
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
+// Your routes
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
@@ -45,11 +54,35 @@ app.use("/api/messages", messageRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/historique", historiqueRoute);
 
-console.log("Hello!");
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    message: 'Server is running',
+    timestamp: new Date().toISOString()
+  });
+});
 
-// ✅ Use Render’s PORT variable, not SERVER_PORT
+// Handle 404 errors
+app.use('*', (req, res) => {
+  res.status(404).json({ 
+    error: 'Route not found',
+    path: req.originalUrl 
+  });
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('Error:', error);
+  res.status(500).json({ 
+    error: 'Internal server error',
+    message: error.message 
+  });
+});
+
 const PORT = process.env.PORT || 8800;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Server is running on port ${PORT}`);
+  console.log(`✅ CORS enabled for: ${allowedOrigins.join(', ')}`);
 });

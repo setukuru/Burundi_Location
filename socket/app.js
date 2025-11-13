@@ -1,9 +1,15 @@
 import { Server } from "socket.io";
 
+// Use proper CORS configuration for production
 export const io = new Server({
   cors: {
-    origin: process.env.CLIENT_URL,
-  },
+    origin: [
+      "https://burundi-location-maison1.onrender.com",
+      "https://burundi-location-3.onrender.com"
+    ],
+    credentials: true,
+    methods: ["GET", "POST"]
+  }
 });
 
 let onlineUser = [];
@@ -27,28 +33,29 @@ export const getUser = (userId) => {
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Track new online user
   socket.on("newUser", (userId) => {
     addUser(userId, socket.id);
+    // Emit to all clients that user is online
+    io.emit("getOnlineUsers", onlineUser);
   });
 
-  // Messaging (optional)
   socket.on("sendMessage", ({ receiverId, data }) => {
     const receiver = getUser(receiverId);
     if (receiver) {
       io.to(receiver.socketId).emit("getMessage", data);
-    } else {
-      console.error("Receiver not found:", receiverId);
     }
   });
 
   socket.on("disconnect", () => {
     removeUser(socket.id);
+    io.emit("getOnlineUsers", onlineUser);
     console.log("User disconnected:", socket.id);
   });
 });
 
-// Start server
-const SOCKET_PORT = process.env.SOCKET_PORT || 5001;
-io.listen(SOCKET_PORT);
-console.log(`Socket.IO server running on port ${SOCKET_PORT}`);
+const PORT = process.env.PORT || 5001;
+io.listen(PORT, {
+  pingTimeout: 60000,
+  pingInterval: 25000
+});
+console.log(`Socket.IO server running on port ${PORT}`);
