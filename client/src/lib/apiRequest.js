@@ -1,8 +1,8 @@
 import axios from "axios";
-import config from "../../config";
+// import config from "../../config";
 
 const apiRequest = axios.create({
-  baseURL: config.API_BASE_URL || "http://localhost:8800/api",
+  baseURL:  "https://burundi-location-3.onrender.com/api" || "http://localhost:8800/api",
   withCredentials: true, // BECAUSE OF THE USE OF COOKIES
 });
 
