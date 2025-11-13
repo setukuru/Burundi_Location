@@ -21,13 +21,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        "https://burundi-location-maison1.onrender.com",
-        "https://burundi-location-1.onrender.com",
-        "https://burundi-location-3.onrender.com"
-      ];
-      
-      // Allow requests with no origin (like mobile apps or postman)
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       
       if (allowedOrigins.indexOf(origin) !== -1) {
@@ -37,9 +31,9 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true, // This is crucial for cookies
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
   })
 );
 
