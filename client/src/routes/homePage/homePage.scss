@@ -1,0 +1,127 @@
+@import "../../responsive.scss";
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.homePage {
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  // margin-top: -60px;
+  .hero-section {
+    position: relative;
+    z-index: 1;
+    background-image: url(/client/public/Burundi.PNG);
+    background-size: cover;
+    padding: 6rem;
+    padding-top: 300px;
+    margin-top: -60px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 30px;
+    .mainTitle {
+      margin-top: 100px;
+      text-align: center;
+      color: #fcf5f3;
+      font-size: 40px;
+      object-fit: cover;
+    }
+    @include sm {
+      // margin-top: -300px;
+      padding: 1rem;
+      padding: 1rem;
+      height: 100vh;
+    }
+    .mainTitle {
+      @include sm {
+        margin-top: -250px;
+        margin-bottom: 100px;
+        font-size: 32px;
+      }
+    }
+    .mainTitle-p {
+      @include sm {
+        display: none;
+      }
+    }
+    .main-Title {
+      @include sm {
+        display: none;
+      }
+    }
+  }
+
+  h1 {
+    font-size: smaller;
+  }
+  // .wrapper-grid {
+  //   display: grid;
+  //   grid-template-columns: repeat(auto-fit, 20rem);
+  //   justify-content: center;
+  // }
+  .wrapper-grid-here {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
+    justify-content: center;
+    align-items: stretch;
+  }
+  // .houseDescrpt {
+  //   padding: 1rem;
+  // }
+  .houseCard {
+    width: 300px;
+    height: auto;
+    margin: 0.5rem;
+    .price-tag {
+      color: #1fa512;
+    }
+    background-color: #dbcccc88;
+    h4 {
+      margin-bottom: 15px;
+    }
+    ul li {
+      font-weight: 7px;
+      list-style: none;
+    }
+    .img-card {
+      height: 200px;
+      width: 100%;
+      /* height: 30px; */
+      object-fit: cover;
+    }
+    .search-btn {
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background-color: #40d132;
+    }
+    .icons {
+      // margin-top: 15px;
+      font-weight: bold;
+      img {
+        width: 20px;
+      }
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .list-button {
+    background-color: #26cd16;
+    padding: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border-radius: 10px;
+    box-shadow: #e4dbf7;
+    border: none;
+    color: #fcf5f3;
+    font-size: 17px;
+    margin-left: 44%;
+  }
+}

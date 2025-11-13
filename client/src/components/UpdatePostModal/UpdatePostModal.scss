@@ -1,0 +1,158 @@
+// New SCSS for a polished modal UI
+
+// --- Variables for easy theming ---
+$color-primary: #007bff;
+$color-text: #4a4a4a;
+$color-placeholder: #a0a0a0;
+$color-border: #dcdcdc;
+$color-bg-light: #f5f5f5;
+$color-shadow: rgba(0, 0, 0, 0.1);
+$border-radius-base: 8px;
+$spacing-unit: 1rem;
+$breakpoint-tablet: 768px;
+
+// --- Main Modal Layout ---
+._myModalOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-unit;
+}
+
+._myModalContent {
+  background: #fff;
+  width: 90%;
+  max-width: 1100px;
+  max-height: 90vh;
+  border-radius: $border-radius-base;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  position: relative;
+  box-shadow: 0 15px 40px $color-shadow;
+  overflow: hidden; // We re-add this to contain the rounded corners. The inner body will scroll.
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+  &:hover {
+    color: #000;
+  }
+}
+
+h2 {
+  grid-column: 1 / -1;
+  padding: 1.5rem 2.5rem;
+  border-bottom: 1px solid $color-border;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: $color-text;
+  margin: 0;
+}
+
+// --- Scrollable Body & 2-Column Layout ---
+._myModalBody {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2.5rem;
+  padding: 2.5rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+// --- Form Styles ---
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item.description {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+input,
+select {
+  padding: 0.75rem 1rem;
+  border: 1px solid $color-border;
+  // FIX: Using calc() for division
+  border-radius: calc($border-radius-base / 2);
+  font-size: 0.95rem;
+  color: $color-text;
+  &:focus {
+    border-color: $color-primary;
+    outline: none;
+  }
+}
+
+.sendButton {
+  grid-column: 1 / -1;
+  padding: 1rem 2rem;
+  background: $color-primary;
+  color: #fff;
+  border: none;
+  // FIX: Using calc() for division
+  border-radius: calc($border-radius-base / 2);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  &:hover {
+    background: darken($color-primary, 10%);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// --- Side Container (Image Gallery) ---
+.sideContainer {
+  background: $color-bg-light;
+  border-radius: $border-radius-base;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  img {
+    width: 100%;
+    height: auto;
+    // FIX: Using calc() for division
+    border-radius: calc($border-radius-base / 2);
+    object-fit: cover;
+  }
+}
+
+// --- Responsive Design ---
+@media (max-width: $breakpoint-tablet) {
+  ._myModalBody {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  h2 {
+    padding: 1.5rem;
+  }
+}

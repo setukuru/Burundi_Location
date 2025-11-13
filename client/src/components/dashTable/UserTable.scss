@@ -1,0 +1,96 @@
+  .user-table {
+    margin-top: 2rem;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .user-table h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .user-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .user-table th,
+  .user-table td {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .user-table th {
+    background-color: #f9f9f9;
+    color: #555;
+  }
+  
+  .user-table tr:hover {
+    background-color: #f3f3f3;
+  }
+  // ...... nested table ..........
+  .expanded-row {
+    transition: all 0.3s ease;
+  }
+  
+  .property-details {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.4s ease;
+    transform-origin: top;
+    padding: 0 0.75rem;
+  }
+  
+  .property-details.expanded {
+    max-height: 1000px; // big enough to fit the table
+    opacity: 1;
+    padding: 1rem 0.75rem;
+  }
+  
+  .nested-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+  }
+  
+  .nested-table th,
+  .nested-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+  }
+  
+  .nested-table th {
+    background-color: #f2f2f2;
+    color: #555;
+  }
+  // ...... icons .............
+  .icon {
+    cursor: pointer;
+    margin-right: 8px;
+    transition: color 0.2s ease;
+  }
+  
+  .view-icon {
+    color: #4a4a4a;
+  
+    &:hover {
+      color: #1e90ff;
+    }
+  }
+  
+  .block-icon {
+    color: #4a4a4a;
+  
+    &:hover {
+      color: #e74c3c;
+    }
+  }
+  .action-icons {
+    gap: 10px;
+  }

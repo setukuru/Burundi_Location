@@ -1,0 +1,319 @@
+// @import "../../responsive.scss";
+
+// .profilePage {
+//   display: flex;
+//   height: 100%;
+
+//   @include md{
+//     flex-direction: column;
+//     overflow: scroll;
+//   }
+
+//   .details {
+//     flex: 3;
+//     overflow-y: scroll;
+//     padding-bottom: 50px;
+
+//     @include md{
+//       flex:none;
+//       height: max-content;
+//     }
+
+//     .wrapper{
+//       padding-right: 50px;
+//       display: flex;
+//       flex-direction: column;
+//       gap: 50px;
+
+//       .title{
+//         display: flex;
+//         align-items: center;
+//         justify-content: space-between;
+
+//         h1{
+//           font-weight: 300;
+//         }
+
+//         button{
+//           padding: 12px 24px;
+//           background-color: #fece51;
+//           cursor: pointer;
+//           border: none;
+//         }
+//       }
+
+//       .info{
+//         display: flex;
+//         flex-direction: column;
+//         gap: 20px;
+
+//         span{
+//           display: flex;
+//           align-items: center;
+//           gap: 20px;
+//         }
+
+//         button{
+//           width: 100px;
+//           background-color: teal;
+//           border: none;
+//           color: white;
+//           padding: 10px 20px;
+//           cursor: pointer;
+//           border-radius: 5px;
+//         }
+
+//         img{
+//           width: 40px;
+//           height: 40px;
+//           border-radius: 50%;
+//           object-fit: cover;
+//         }
+//       }
+//     }
+//   }
+//   .chatContainer {
+//     flex: 2;
+//     background-color: #fcf5f3;
+//     height: 100%;
+
+//     @include md{
+//       flex:none;
+//       height: max-content;
+//     }
+
+//     .wrapper{
+//       padding: 0px 20px;
+//       height: 100%;
+//     }
+//   }
+
+//   .modal-overlay-ProfilePage {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100vw;
+//   height: 100vh;
+//   background: rgba(0, 0, 0, 0.6);
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: center;
+//   overflow-y: auto;
+//   z-index: 9999;
+//   padding: 2rem;
+// }
+
+// .modal-content-ProfilePage {
+//   background: #fff;
+//   border-radius: 16px;
+//   max-width: 1000px;
+//   width: 100%;
+//   padding: 1rem;
+//   position: relative;
+//   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+//   margin-top: 2rem;
+// }
+
+// .close-modal-ProfilePage {
+//   position: absolute;
+//   top: 12px;
+//   right: 16px;
+//   background: none;
+//   border: none;
+//   font-size: 1.4rem;
+//   cursor: pointer;
+// }
+
+// }
+@import "../../responsive.scss";
+
+.profilePage {
+  display: flex;
+  height: 100%;
+
+  @include md {
+    flex-direction: column;
+    overflow: scroll;
+  }
+
+  .details {
+    flex: 3;
+    overflow-y: scroll;
+    padding-bottom: 50px;
+
+    @include md {
+      flex: none;
+      height: max-content;
+    }
+
+    .wrapper {
+      padding-right: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        h1 {
+          font-weight: 300;
+        }
+
+        button {
+          padding: 12px 24px;
+          background-color: #fece51;
+          cursor: pointer;
+          border: none;
+        }
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        button {
+          width: 100px;
+          background-color: teal;
+          border: none;
+          color: white;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  .chatContainer {
+    flex: 2;
+    background-color: #fcf5f3;
+    height: 100%;
+
+    @include md {
+      flex: none;
+      height: max-content;
+    }
+
+    .wrapper {
+      padding: 0px 20px;
+      height: 100%;
+    }
+  }
+
+  /* 🔥 CREATE NEW POST MODAL (already existed) */
+  .modal-overlay-ProfilePage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    z-index: 9999;
+    padding: 2rem;
+  }
+
+  .modal-content-ProfilePage {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 1000px;
+    width: 100%;
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
+  }
+
+  .close-modal-ProfilePage {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+
+  /* ✅ ADDED: HISTORY MODAL (copied from file A) */
+  .modalOverlayH {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modalContentH {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative;
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+
+        b {
+          color: #fece51;
+        }
+      }
+    }
+
+    .closeModalH {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: #ff4d4f;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .modalContentH {
+      width: 95%;
+      padding: 20px;
+    }
+  }
+}

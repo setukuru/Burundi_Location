@@ -1,0 +1,101 @@
+// src/components/Card/Card.scss
+
+// Optional: Define variables for easier theming
+$card-bg: #ffffff;
+$card-border-radius: 10px;
+$card-padding: 24px;
+$card-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+$card-hover-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+$card-transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+$icon-wrapper-bg: #eef4ff; // Light blue background for icon
+$icon-color: #4a69bd;     // Primary color for icon
+$icon-size: 28px;
+$icon-wrapper-size: 60px;
+$icon-wrapper-radius: 50%;
+
+$value-color: #1e2a3b;    // Darker color for the main value
+$value-font-size: 2.2rem;
+$value-font-weight: 600;
+
+$title-color: #7a8aa0;     // Softer color for the title
+$title-font-size: 0.9rem;
+$title-font-weight: 500;
+
+.card {
+  background-color: $card-bg;
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+  box-shadow: $card-shadow;
+  transition: $card-transition;
+  display: flex;
+  align-items: center;
+  gap: 20px; // Space between icon and content
+  min-width: 250px; // Ensure it doesn't get too narrow
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $card-hover-shadow;
+  }
+
+  &__icon-wrapper {
+    flex-shrink: 0; // Prevent icon wrapper from shrinking
+    background-color: $icon-wrapper-bg;
+    border-radius: $icon-wrapper-radius;
+    width: $icon-wrapper-size;
+    height: $icon-wrapper-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__icon {
+    font-size: $icon-size;
+    color: $icon-color;
+    display: block; // Helps with alignment sometimes
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; // Align text to the left within this block
+  }
+
+  &__value {
+    color: $value-color;
+    font-size: $value-font-size;
+    font-weight: $value-font-weight;
+    line-height: 1.2; // Adjust line height for large font
+    margin-bottom: 4px;
+  }
+
+  &__title {
+    color: $title-color;
+    font-size: $title-font-size;
+    font-weight: $title-font-weight;
+    text-transform: uppercase; // Optional: Uppercase title
+    letter-spacing: 0.5px;   // Optional: Slight letter spacing
+  }
+}
+
+// --- Optional Variations ---
+// You could add modifier classes if needed, passed via `className` prop
+
+// Example: Different icon colors/backgrounds
+.card--users {
+  .card__icon-wrapper {
+    background-color: #e0fbf6; // Light teal
+  }
+  .card__icon {
+    color: #1abc9c; // Teal
+  }
+}
+
+.card--properties {
+  .card__icon-wrapper {
+    background-color: #fff4e6; // Light orange
+  }
+  .card__icon {
+    color: #f39c12; // Orange
+  }
+}

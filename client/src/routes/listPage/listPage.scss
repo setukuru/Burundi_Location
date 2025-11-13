@@ -1,0 +1,34 @@
+@import "../../responsive.scss";
+
+.listPage {
+  // display: flex;
+  // height: 100%;
+  height: 100%;
+  overflow-y: scroll;
+
+  .wrapper-grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, 20rem);
+    justify-content: center;
+  }
+    .wrapper{
+      height: 100%;
+      padding-right: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      overflow-y: scroll;
+      padding-bottom: 50px;
+    }
+  
+  // .mapContainer {
+  //   flex: 2;
+  //   height: 100%;
+  //   background-color: #fcf5f3;
+
+  //   @include md{
+  //     display: none;
+  //   }
+  // }
+}

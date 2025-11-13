@@ -1,0 +1,14 @@
+.portfolio {
+  padding: 20px;
+
+  h3 {
+    margin-bottom: 20px;
+  }
+
+  .portfolioGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 20px;
+    justify-items: center; // keeps cards centered when only 1
+  }
+}

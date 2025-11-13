@@ -1,0 +1,42 @@
+// .dashboard-container {
+//     padding: 25px;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 30px;
+//   }
+  
+//   .dashboard__cards {
+//     display: flex;
+//     flex-wrap: wrap;
+//     gap: 20px;
+  
+//   }
+
+  .card-grid {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  
+    .card {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+  
+    .card.active {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .table-section {
+    transition: opacity 0.4s ease-in-out;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
