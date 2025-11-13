@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import "./navbar.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Add useNavigate
 import { AuthContext } from "../../context/AuthContext";
 import { useNotificationStore } from "../../lib/notificationStore";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate(); // Add navigate for programmatic navigation
 
   // Destructure isProprietaire directly from the context
   const { currentUser, isProprietaire } = useContext(AuthContext);
@@ -15,13 +16,25 @@ function Navbar() {
 
   if (currentUser) fetch();
 
+  // Handle logo click with navigate to prevent full reload
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    navigate("/");
+  };
+
   return (
     <nav>
       <div className="left">
-        <a href="/" className="logo">
+        {/* Replace a tag with Link or use navigate */}
+        <Link to="/" className="logo">
           <img src="/logo.png" alt="" />
           <span>Burundi-Location</span>
-        </a>
+        </Link>
+        {/* Alternative: if you prefer using onClick */}
+        {/* <a href="/" className="logo" onClick={handleLogoClick}>
+          <img src="/logo.png" alt="" />
+          <span>Burundi-Location</span>
+        </a> */}
       </div>
       <div className="right">
         {currentUser ? (
@@ -39,10 +52,11 @@ function Navbar() {
           </div>
         ) : (
           <>
-            <a href="/login">Sign in</a>
-            <a href="/register" className="register">
+            {/* FIXED: Replace a tags with Link components */}
+            <Link to="/login">Sign in</Link>
+            <Link to="/register" className="register">
               Sign up
-            </a>
+            </Link>
           </>
         )}
         <div className="menuIcon">
@@ -51,6 +65,15 @@ function Navbar() {
             alt=""
             onClick={() => setOpen((prev) => !prev)}
           />
+        </div>
+        <div className={open ? "menu active" : "menu"}>
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+          <Link to="/agents">Agents</Link>
+          <Link to="/logout" onClick={() => {/* handle logout */}}>
+            Logout
+          </Link>
         </div>
       </div>
     </nav>
