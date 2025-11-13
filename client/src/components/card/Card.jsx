@@ -4,9 +4,10 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 import DecisionModal from "../DecisionModal/DecisionModal";
-import UpdatePostModal from "../updatePostModal/UpdatePostModal";
+// import UpdatePostModal from "../updatePostModal/UpdatePostModal";
 import { io } from "socket.io-client";
 import config from "../../../config";
+import UpdatePostModal from "../UpdatePostModal/UpdatePostModal";
 
 const socket = io(config.SOCKET_BASE_URL); // connect to Node server
 
