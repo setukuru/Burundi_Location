@@ -217,6 +217,9 @@ export const register = async (req, res) => {
 // =============================
 // UNIFIED LOGIN
 // =============================
+// =============================
+// UNIFIED LOGIN
+// =============================
 export const login = async (req, res) => {
   const { username, password } = req.body;
 
@@ -263,10 +266,14 @@ export const login = async (req, res) => {
 
     const { password: _, ...userInfo } = user;
 
+    // ✅ FIXED: Add cross-origin cookie settings
     res
       .cookie("token", token, {
         httpOnly: true,
+        secure: true, // REQUIRED for HTTPS in production
+        sameSite: "none", // REQUIRED for cross-origin
         maxAge: age,
+        path: "/", // Make cookie available on all paths
       })
       .status(200)
       .json(userInfo);
@@ -282,7 +289,6 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Failed to login!" });
   }
 };
-
 // =============================
 // LOGOUT
 // =============================
@@ -292,8 +298,12 @@ export const logout = async (req, res) => {
     let userId;
 
     if (token) {
-      const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      userId = payload.id;
+      try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        userId = payload.id;
+      } catch (err) {
+        console.log("Invalid token during logout:", err.message);
+      }
     }
 
     if (userId) {
@@ -301,7 +311,16 @@ export const logout = async (req, res) => {
       await addHistory(userId, "LOGOUT", "User logged out");
     }
 
-    res.clearCookie("token").status(200).json({ message: "Logout Successful" });
+    // ✅ FIXED: Add cross-origin cookie clearing settings
+    res
+      .clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      })
+      .status(200)
+      .json({ message: "Logout Successful" });
   } catch (err) {
     console.error("Logout error:", err);
     res.status(500).json({ message: "Failed to logout!" });
