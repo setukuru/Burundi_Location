@@ -38,7 +38,9 @@ app.use("/api/historique", historiqueRoute);
 
 console.log("Hello!");
 
-const PORT = process.env.SERVER_PORT || 8800;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}!`);
+// ✅ Use Render’s PORT variable, not SERVER_PORT
+const PORT = process.env.PORT || 8800;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Server is running on port ${PORT}`);
 });
