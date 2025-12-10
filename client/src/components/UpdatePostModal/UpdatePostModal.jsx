@@ -19,7 +19,7 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
     try {
       const res = await apiRequest.put(`/posts/${post.id}`, {
         postData: {
-          ...post,
+          // Don't include: id, createdAt, userId
           title: inputs.title,
           price: parseInt(inputs.price) || 0,
           address: inputs.address,
@@ -31,10 +31,13 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
           latitude: inputs.latitude,
           longitude: inputs.longitude,
           images,
+          rented: post.rented, // Keep existing value if not changing
         },
         postDetail: {
-          ...post.postDetail,
+          id: post.postDetail?.id, // This is needed for the relation update
           desc: value,
+          size: post.postDetail?.size, // Keep existing values
+          daysVisit: post.postDetail?.daysVisit, // Keep existing values
         },
       });
 
@@ -59,15 +62,30 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
           <form onSubmit={handleSubmit}>
             <div className="item">
               <label htmlFor="title">Titre</label>
-              <input id="title" name="title" type="text" defaultValue={post.title} />
+              <input
+                id="title"
+                name="title"
+                type="text"
+                defaultValue={post.title}
+              />
             </div>
             <div className="item">
               <label htmlFor="price">Prix</label>
-              <input id="price" name="price" type="number" defaultValue={post.price} />
+              <input
+                id="price"
+                name="price"
+                type="number"
+                defaultValue={post.price}
+              />
             </div>
             <div className="item">
               <label htmlFor="address">Adresse</label>
-              <input id="address" name="address" type="text" defaultValue={post.address} />
+              <input
+                id="address"
+                name="address"
+                type="text"
+                defaultValue={post.address}
+              />
             </div>
             <div className="item description">
               <label>Description</label>
@@ -75,23 +93,48 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
             </div>
             <div className="item">
               <label htmlFor="city">Ville</label>
-              <input id="city" name="city" type="text" defaultValue={post.city} />
+              <input
+                id="city"
+                name="city"
+                type="text"
+                defaultValue={post.city}
+              />
             </div>
             <div className="item">
               <label htmlFor="bedroom">Nombre de chambres</label>
-              <input id="bedroom" name="bedroom" type="number" defaultValue={post.bedroom} />
+              <input
+                id="bedroom"
+                name="bedroom"
+                type="number"
+                defaultValue={post.bedroom}
+              />
             </div>
             <div className="item">
               <label htmlFor="bathroom">Nombre de salles de bain</label>
-              <input id="bathroom" name="bathroom" type="number" defaultValue={post.bathroom} />
+              <input
+                id="bathroom"
+                name="bathroom"
+                type="number"
+                defaultValue={post.bathroom}
+              />
             </div>
             <div className="item">
               <label htmlFor="latitude">Latitude</label>
-              <input id="latitude" name="latitude" type="text" defaultValue={post.latitude} />
+              <input
+                id="latitude"
+                name="latitude"
+                type="text"
+                defaultValue={post.latitude}
+              />
             </div>
             <div className="item">
               <label htmlFor="longitude">Longitude</label>
-              <input id="longitude" name="longitude" type="text" defaultValue={post.longitude} />
+              <input
+                id="longitude"
+                name="longitude"
+                type="text"
+                defaultValue={post.longitude}
+              />
             </div>
 
             <button className="sendButton">Mettre à jour</button>
