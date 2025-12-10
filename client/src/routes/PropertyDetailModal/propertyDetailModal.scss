@@ -1,34 +1,365 @@
 .propertyDetailModalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
-  
+
   .propertyDetailModalContent {
-    width: 90%;
+    background: white;
+    border-radius: 24px;
+    width: 100%;
     max-width: 1200px;
     max-height: 90vh;
     overflow-y: auto;
-    background-color: white;
-    padding: 2rem;
-    border-radius: 12px;
     position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modalHeader {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+      padding: 24px 32px;
+      border-bottom: 1px solid #eaeaea;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .modalTitle {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+        max-width: 80%;
+      }
+
+      .closeModal {
+        background: #f5f5f5;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #666;
+        font-size: 20px;
+
+        &:hover {
+          background: #e0e0e0;
+          color: #333;
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    .modalBody {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 32px;
+      padding: 32px;
+
+      @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .leftColumn {
+        .imageSection {
+          margin-bottom: 32px;
+          border-radius: 16px;
+          overflow: hidden;
+        }
+
+        .featuresGrid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          margin-bottom: 32px;
+
+          @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+          }
+
+          .featureItem {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: transform 0.2s;
+
+            &:hover {
+              transform: translateY(-2px);
+              background: #f0f2f5;
+            }
+
+            .featureIcon {
+              font-size: 24px;
+              color: #4a6cf7;
+              min-width: 40px;
+            }
+
+            .featureContent {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .featureLabel {
+                font-size: 14px;
+                color: #666;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+
+              .featureValue {
+                font-size: 20px;
+                font-weight: 600;
+                color: #1a1a1a;
+              }
+            }
+          }
+        }
+
+        .descriptionSection {
+          .sectionTitle {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4a6cf7;
+          }
+
+          .descriptionContent {
+            line-height: 1.6;
+            color: #444;
+            font-size: 15px;
+
+            p {
+              margin-bottom: 16px;
+            }
+          }
+        }
+      }
+
+      .rightColumn {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        .priceSection {
+          .priceTag {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 12px;
+
+            .priceAmount {
+              font-size: 32px;
+              font-weight: 700;
+              color: #4a6cf7;
+            }
+
+            .priceType {
+              font-size: 16px;
+              color: #666;
+            }
+          }
+
+          .address {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 15px;
+
+            svg {
+              color: #ff6b6b;
+            }
+          }
+        }
+
+        .ownerSection {
+          .ownerCard {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.2s;
+
+            &:hover {
+              background: #f0f2f5;
+            }
+
+            .ownerAvatar {
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+              overflow: hidden;
+              background: #e9ecef;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+
+              .defaultAvatar {
+                width: 100%;
+                height: 100%;
+                padding: 16px;
+                color: #adb5bd;
+              }
+            }
+
+            .ownerInfo {
+              h4 {
+                margin: 0 0 4px 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: #1a1a1a;
+              }
+
+              .ownerRating {
+                margin: 0;
+                font-size: 14px;
+                color: #666;
+              }
+            }
+          }
+        }
+
+        .mapSection {
+          .mapContainer {
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+          }
+        }
+
+        .actionButtons {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &.btnPrimary {
+              background: #4a6cf7;
+              color: white;
+
+              &:hover {
+                background: #3a5ce5;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+              }
+
+              &:active {
+                transform: translateY(0);
+              }
+            }
+
+            &.btnSecondary {
+              background: #f8f9fa;
+              color: #1a1a1a;
+              border: 2px solid #e9ecef;
+
+              &:hover {
+                background: #e9ecef;
+                border-color: #dee2e6;
+              }
+
+              &.saved {
+                background: #fff9e6;
+                border-color: #ffd43b;
+                color: #e6a700;
+
+                &:hover {
+                  background: #fff3cc;
+                }
+              }
+            }
+          }
+        }
+
+        .quickInfo {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          padding: 20px;
+          background: #f8f9fa;
+          border-radius: 12px;
+
+          .infoItem {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .infoLabel {
+              font-size: 12px;
+              color: #666;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+
+            .infoValue {
+              font-size: 14px;
+              font-weight: 500;
+              color: #1a1a1a;
+            }
+          }
+        }
+      }
+
+      .sectionTitle {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+      }
+    }
   }
-  
-  .closeModal {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 2rem;
-    cursor: pointer;
-    background: none;
-    border: none;
-  }
-  
+}
