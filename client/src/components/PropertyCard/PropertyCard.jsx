@@ -17,12 +17,6 @@ function PropertyCard({ post, onClick, onEdit }) {
           <span>{post.property}</span>
         </div>
       </div>
-      <button className="editButton" onClick={(e) => { 
-        e.stopPropagation(); // prevent opening detail modal
-        onEdit();
-      }}>
-        Edit
-      </button>
     </div>
   );
 }
