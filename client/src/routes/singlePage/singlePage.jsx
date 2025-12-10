@@ -13,7 +13,6 @@ function SinglePage() {
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUser } = useContext(AuthContext);
   const [showChat, setShowChat] = useState(false);
-  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleSave = async () => {
@@ -39,15 +38,12 @@ function SinglePage() {
 
     try {
       const response = await apiRequest.post("/chats/", {
-        receiverId: post.userId, // proprietaire
-        propertyId: post.id, // property linked to chat
+        receiverId: post.userId,
+        propertyId: post.id,
       });
 
       if (response.status === 200 || response.status === 201) {
         console.log("Chat created:", response.data);
-
-        // Optional: open the chat UI immediately
-        setMessage(`Hello, I'm interested in your property (ID: ${post.id})`);
         setShowChat(true);
       } else {
         console.error("Failed to create chat.");
@@ -94,12 +90,13 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <div>
+            {/* Only show Send Message button if user is NOT proprietaire */}
+            {currentUser?.role !== 'proprietaire' && (
               <button onClick={handleSendMessage}>
                 <img src="/chat.png" alt="" />
                 Send a Message
               </button>
-            </div>
+            )}
             <button
               onClick={handleSave}
               style={{ backgroundColor: saved ? "#fece51" : "white" }}
@@ -108,7 +105,7 @@ function SinglePage() {
               {saved ? "Place Saved" : "Save the Place"}
             </button>
           </div>
-          {showChat && <Chat postId={post.id} initialMessage={message} />}
+          {showChat && <Chat postId={post.id} />}
         </div>
       </div>
     </div>
