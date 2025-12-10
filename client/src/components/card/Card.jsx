@@ -110,15 +110,16 @@ function Card({ item }) {
         </div>
 
         <div className="card-actions">
-          <button
-            className="deal-button"
-            onClick={loadClients}
-            disabled={isLoading}
-          >
-            Deal
-            {isLoading && <span className="spinner"></span>}
-          </button>
-
+          {currentUser?.id === item.userId && (
+            <button
+              className="deal-button"
+              onClick={loadClients}
+              disabled={isLoading}
+            >
+              Deal
+              {isLoading && <span className="spinner"></span>}
+            </button>
+          )}
           {currentUser?.id === item.userId && (
             <>
               <button
@@ -182,4 +183,3 @@ function Card({ item }) {
 }
 
 export default Card;
-
