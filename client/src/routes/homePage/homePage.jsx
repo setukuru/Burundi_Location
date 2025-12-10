@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Added
 import SearchBar from "../../components/searchBar/SearchBar";
 import "./homePage.scss";
 import { AuthContext } from "../../context/AuthContext";
@@ -6,12 +7,22 @@ import apiRequest from "../../lib/apiRequest";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
 import PropertyDetailModal from "../PropertyDetailModal/PropertyDetailModal";
 
-
 function HomePage() {
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate(); // Added
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState(null);
+
+  // Handle property click with authentication check
+  const handlePropertyClick = (property) => {
+    if (!currentUser) {
+      alert("Vous devez être connecté pour voir cette annonce !");
+      navigate("/login"); // redirect to login page
+      return;
+    }
+    setSelectedProperty(property);
+  };
 
   useEffect(() => {
     const fetchRandomProperties = async () => {
@@ -49,7 +60,8 @@ function HomePage() {
             <PropertyCard
               key={property.id}
               post={property}
-              onClick={() => setSelectedProperty(property)}
+              onClick={() => handlePropertyClick(property)}
+              style={{ cursor: currentUser ? "pointer" : "not-allowed" }} // Added style
             />
           ))}
         </div>
