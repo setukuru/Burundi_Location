@@ -5,13 +5,10 @@ import DOMPurify from "dompurify";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
-import Chat from "../../components/chat/Chat";
 
 function PropertyDetailModal({ post, onClose }) {
   const { currentUser } = useContext(AuthContext);
   const [saved, setSaved] = useState(post.isSaved);
-  const [showChat, setShowChat] = useState(true);
-  const [message, setMessage] = useState(null);
 
   const handleSave = async () => {
     if (!currentUser) return;
@@ -32,7 +29,9 @@ function PropertyDetailModal({ post, onClose }) {
         propertyId: post.id,
         userId: currentUser.id,
       });
-      if (response.status === 200) console.log("Chat created:", response.data);
+      if (response.status === 200) {
+        console.log("Chat created:", response.data);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -40,47 +39,97 @@ function PropertyDetailModal({ post, onClose }) {
 
   return (
     <div className="propertyDetailModalOverlay" onClick={onClose}>
-      <div
-        className="propertyDetailModalContent"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button className="closeModal" onClick={onClose}>
-          ×
-        </button>
+      <div className="modalContainer" onClick={(e) => e.stopPropagation()}>
+        {/* Close button */}
+        <button className="closeBtn" onClick={onClose}>×</button>
 
-        <div className="details">
-          <Slider images={post.images} />
-          <div className="info">
-            <h1>{post.title}</h1>
-            <p className="address">{post.address}</p>
-            <p className="price">{post.price.toLocaleString()} Fbu</p>
-            <div
-              className="description"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(post.postDetail?.desc || ""),
-              }}
-            ></div>
+        <div className="modalContent">
+          {/* Left side - Images */}
+          <div className="imageSection">
+            <Slider images={post.images} />
           </div>
-        </div>
 
-        <div className="features">
-          <p className="title">Location</p>
-          <Map items={[post]} />
+          {/* Right side - Details */}
+          <div className="detailsSection">
+            {/* Header */}
+            <div className="header">
+              <h1 className="title">{post.title}</h1>
+              <div className="price">{post.price.toLocaleString()} Fbu</div>
+            </div>
 
-          <div className="buttons">
-            <button onClick={handleSendMessage}>
-              <img src="/chat.png" alt="" />
-              envoie Message
-            </button>
-            <button
-              onClick={handleSave}
-              style={{ backgroundColor: saved ? "#fece51" : "white" }}
-            >
-              <img src="/save.png" alt="" />
-              {saved ? "Place Saved" : "Save the Place"}
-            </button>
+            {/* Address */}
+            <div className="address">
+              <span>📍</span>
+              <span>{post.address}</span>
+            </div>
+
+            {/* Quick info */}
+            <div className="quickInfo">
+              {post.bedroom && (
+                <div className="infoItem">
+                  <span>🛏️ {post.bedroom} bed{post.bedroom > 1 ? 's' : ''}</span>
+                </div>
+              )}
+              {post.bathroom && (
+                <div className="infoItem">
+                  <span>🚿 {post.bathroom} bath{post.bathroom > 1 ? 's' : ''}</span>
+                </div>
+              )}
+              {post.size && (
+                <div className="infoItem">
+                  <span>📐 {post.size} m²</span>
+                </div>
+              )}
+            </div>
+
+            {/* Description */}
+            <div className="description">
+              <h3>Description</h3>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(post.postDetail?.desc || "No description"),
+                }}
+              />
+            </div>
+
+            {/* Owner info */}
+            <div className="owner">
+              <div className="ownerInfo">
+                <div className="ownerAvatar">
+                  {post.user?.avatar ? (
+                    <img src={post.user.avatar} alt={post.user.username} />
+                  ) : (
+                    <div className="defaultAvatar">👤</div>
+                  )}
+                </div>
+                <div>
+                  <div className="ownerName">{post.user?.username || "Owner"}</div>
+                  <div className="ownerLabel">Property Owner</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Map */}
+            <div className="map">
+              <h3>Location</h3>
+              <Map items={[post]} />
+            </div>
+
+            {/* Action buttons */}
+            <div className="actions">
+              {currentUser?.role !== 'proprietaire' && (
+                <button className="messageBtn" onClick={handleSendMessage}>
+                  <span>💬 Message</span>
+                </button>
+              )}
+              <button 
+                className={`saveBtn ${saved ? 'saved' : ''}`}
+                onClick={handleSave}
+              >
+                <span>{saved ? '✓ Saved' : '🔖 Save'}</span>
+              </button>
+            </div>
           </div>
-          {showChat && <Chat postId={post.id} initialMessage={message} />}
         </div>
       </div>
     </div>
