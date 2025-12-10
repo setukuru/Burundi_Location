@@ -10,13 +10,13 @@ function DecisionModal({
   onConfirm,
   onUnconfirm,
 }) {
+  // Track loading state for each client
+  const [loadingIds, setLoadingIds] = useState([]);
   if (!show) return null;
 
   const wrapperClass = inline ? "modal-inline" : "modal-overlay";
   const boxClass = inline ? "modal-box-inline" : "modal-box";
 
-  // Track loading state for each client
-  const [loadingIds, setLoadingIds] = useState([]);
 
   const handleConfirm = async (clientObj) => {
     if (!onConfirm) return;
