@@ -13,13 +13,34 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Clear previous errors
+    
+    // Validate required fields
+    if (!value.trim()) {
+      setError("Description is required");
+      return;
+    }
+    
+    if (images.length === 0) {
+      setError("At least one image is required");
+      return;
+    }
+
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
+
+    // Validate form inputs
+    const requiredFields = ['title', 'price', 'address', 'city', 'bedroom', 'bathroom', 'type', 'property'];
+    for (const field of requiredFields) {
+      if (!inputs[field]?.toString().trim()) {
+        setError(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+        return;
+      }
+    }
 
     try {
       const res = await apiRequest.put(`/posts/${post.id}`, {
         postData: {
-          // Don't include: id, createdAt, userId
           title: inputs.title,
           price: parseInt(inputs.price) || 0,
           address: inputs.address,
@@ -31,13 +52,13 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
           latitude: inputs.latitude,
           longitude: inputs.longitude,
           images,
-          rented: post.rented, // Keep existing value if not changing
+          rented: post.rented,
         },
         postDetail: {
-          id: post.postDetail?.id, // This is needed for the relation update
+          id: post.postDetail?.id,
           desc: value,
-          size: post.postDetail?.size, // Keep existing values
-          daysVisit: post.postDetail?.daysVisit, // Keep existing values
+          size: post.postDetail?.size,
+          daysVisit: post.postDetail?.daysVisit,
         },
       });
 
@@ -49,7 +70,6 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
     }
   };
 
-  // --- Main modal markup ---
   const modalContent = (
     <div className="_myModalOverlay">
       <div className="_myModalContent">
@@ -61,62 +81,99 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
         <div className="_myModalBody">
           <form onSubmit={handleSubmit}>
             <div className="item">
-              <label htmlFor="title">Titre</label>
+              <label htmlFor="title">Titre *</label>
               <input
                 id="title"
                 name="title"
                 type="text"
                 defaultValue={post.title}
+                required
               />
             </div>
             <div className="item">
-              <label htmlFor="price">Prix</label>
+              <label htmlFor="price">Prix *</label>
               <input
                 id="price"
                 name="price"
                 type="number"
                 defaultValue={post.price}
+                required
+                min="0"
               />
             </div>
             <div className="item">
-              <label htmlFor="address">Adresse</label>
+              <label htmlFor="address">Adresse *</label>
               <input
                 id="address"
                 name="address"
                 type="text"
                 defaultValue={post.address}
+                required
               />
             </div>
             <div className="item description">
-              <label>Description</label>
+              <label>Description *</label>
               <ReactQuill theme="snow" onChange={setValue} value={value} />
             </div>
             <div className="item">
-              <label htmlFor="city">Ville</label>
+              <label htmlFor="city">Ville *</label>
               <input
                 id="city"
                 name="city"
                 type="text"
                 defaultValue={post.city}
+                required
               />
             </div>
             <div className="item">
-              <label htmlFor="bedroom">Nombre de chambres</label>
+              <label htmlFor="bedroom">Nombre de chambres *</label>
               <input
                 id="bedroom"
                 name="bedroom"
                 type="number"
                 defaultValue={post.bedroom}
+                required
+                min="0"
               />
             </div>
             <div className="item">
-              <label htmlFor="bathroom">Nombre de salles de bain</label>
+              <label htmlFor="bathroom">Nombre de salles de bain *</label>
               <input
                 id="bathroom"
                 name="bathroom"
                 type="number"
                 defaultValue={post.bathroom}
+                required
+                min="0"
               />
+            </div>
+            <div className="item">
+              <label htmlFor="type">Type *</label>
+              <select
+                id="type"
+                name="type"
+                defaultValue={post.type}
+                required
+              >
+                <option value="">Select type</option>
+                <option value="maison">Maison</option>
+                <option value="appartement">Appartement</option>
+                <option value="studio">Studio</option>
+                <option value="villa">Villa</option>
+              </select>
+            </div>
+            <div className="item">
+              <label htmlFor="property">Property Type *</label>
+              <select
+                id="property"
+                name="property"
+                defaultValue={post.property}
+                required
+              >
+                <option value="">Select property type</option>
+                <option value="rent">Rent</option>
+                <option value="sale">Sale</option>
+              </select>
             </div>
             <div className="item">
               <label htmlFor="latitude">Latitude</label>
@@ -137,30 +194,44 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
               />
             </div>
 
-            <button className="sendButton">Mettre à jour</button>
-            {error && <span>{error}</span>}
+            <button className="sendButton" type="submit">Mettre à jour</button>
+            {error && <span className="error">{error}</span>}
           </form>
 
           <div className="sideContainer">
-            {images.map((img, i) => (
-              <img key={i} src={img} alt="" />
-            ))}
-            <UploadWidget
-              uwConfig={{
-                multiple: true,
-                cloudName: "lamadev",
-                uploadPreset: "estate",
-                folder: "posts",
-              }}
-              setState={setImages}
-            />
+            <div className="imageUploadSection">
+              <h4>Images *</h4>
+              {images.length === 0 && <p className="imageWarning">At least one image is required</p>}
+              <div className="imagePreview">
+                {images.map((img, i) => (
+                  <div key={i} className="imageItem">
+                    <img src={img} alt={`Preview ${i + 1}`} />
+                    <button 
+                      type="button" 
+                      className="removeImage"
+                      onClick={() => setImages(images.filter((_, index) => index !== i))}
+                    >
+                      ✖
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <UploadWidget
+                uwConfig={{
+                  multiple: true,
+                  cloudName: "lamadev",
+                  uploadPreset: "estate",
+                  folder: "posts",
+                }}
+                setState={setImages}
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 
-  // --- Render at root level ---
   return createPortal(modalContent, document.body);
 }
 
