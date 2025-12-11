@@ -10,53 +10,115 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
   const [value, setValue] = useState(post.postDetail?.desc || "");
   const [images, setImages] = useState(post.images || []);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-    
-    // Validate required fields
-    if (!value.trim()) {
-      setError("Description is required");
-      return;
-    }
-    
-    if (images.length === 0) {
-      setError("At least one image is required");
-      return;
-    }
+    setError("");
+    setIsSubmitting(true);
 
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
 
-    // Validate form inputs
-    const requiredFields = ['title', 'price', 'address', 'city', 'bedroom', 'bathroom', 'type', 'property'];
-    for (const field of requiredFields) {
+    // Validation
+    const requiredFields = [
+      { field: 'title', label: 'Titre' },
+      { field: 'price', label: 'Prix' },
+      { field: 'address', label: 'Adresse' },
+      { field: 'city', label: 'Ville' },
+      { field: 'bedroom', label: 'Nombre de chambres' },
+      { field: 'bathroom', label: 'Nombre de salles de bain' },
+      { field: 'type', label: 'Type' },
+      { field: 'property', label: 'Property' }
+    ];
+
+    // Check for empty required fields
+    for (const { field, label } of requiredFields) {
       if (!inputs[field]?.toString().trim()) {
-        setError(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+        setError(`${label} est requis`);
+        setIsSubmitting(false);
         return;
       }
+    }
+
+    // Check description (ReactQuill value)
+    if (!value.trim()) {
+      setError("Description est requise");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Check if description is not just empty HTML tags
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = value;
+    if (tempDiv.textContent.trim() === '' && tempDiv.innerHTML !== '<p><br></p>') {
+      setError("Description ne peut pas être vide");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Check images
+    if (images.length === 0) {
+      setError("Au moins une image est requise");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate numeric fields
+    const price = parseInt(inputs.price) || 0;
+    const bedroom = parseInt(inputs.bedroom) || 0;
+    const bathroom = parseInt(inputs.bathroom) || 0;
+
+    if (price <= 0) {
+      setError("Le prix doit être supérieur à 0");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (bedroom < 0) {
+      setError("Le nombre de chambres ne peut pas être négatif");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (bathroom < 0) {
+      setError("Le nombre de salles de bain ne peut pas être négatif");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate latitude/longitude format if provided
+    if (inputs.latitude && !/^-?\d+(\.\d+)?$/.test(inputs.latitude)) {
+      setError("Latitude invalide");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (inputs.longitude && !/^-?\d+(\.\d+)?$/.test(inputs.longitude)) {
+      setError("Longitude invalide");
+      setIsSubmitting(false);
+      return;
     }
 
     try {
       const res = await apiRequest.put(`/posts/${post.id}`, {
         postData: {
-          title: inputs.title,
-          price: parseInt(inputs.price) || 0,
-          address: inputs.address,
-          city: inputs.city,
-          bedroom: parseInt(inputs.bedroom) || 0,
-          bathroom: parseInt(inputs.bathroom) || 0,
-          type: inputs.type,
-          property: inputs.property,
-          latitude: inputs.latitude,
-          longitude: inputs.longitude,
+          title: inputs.title.trim(),
+          price: price,
+          address: inputs.address.trim(),
+          city: inputs.city.trim(),
+          bedroom: bedroom,
+          bathroom: bathroom,
+          type: inputs.type.trim(),
+          property: inputs.property.trim(),
+          latitude: inputs.latitude?.trim() || "",
+          longitude: inputs.longitude?.trim() || "",
           images,
           rented: post.rented,
         },
         postDetail: {
           id: post.postDetail?.id,
-          desc: value,
+          desc: value.trim(),
           size: post.postDetail?.size,
           daysVisit: post.postDetail?.daysVisit,
         },
@@ -66,15 +128,18 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
       onUpdated(res.data);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Update failed!");
+      setError(err.response?.data?.message || "Échec de la mise à jour!");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // --- Main modal markup ---
   const modalContent = (
     <div className="_myModalOverlay">
       <div className="_myModalContent">
-        <h2>Update Post</h2>
-        <button className="closeBtn" onClick={onClose}>
+        <h2>Modifier l&apos;annonce</h2>
+        <button className="closeBtn" onClick={onClose} disabled={isSubmitting}>
           ✖
         </button>
 
@@ -88,6 +153,7 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 type="text"
                 defaultValue={post.title}
                 required
+                disabled={isSubmitting}
               />
             </div>
             <div className="item">
@@ -98,7 +164,8 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 type="number"
                 defaultValue={post.price}
                 required
-                min="0"
+                min="1"
+                disabled={isSubmitting}
               />
             </div>
             <div className="item">
@@ -109,11 +176,17 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 type="text"
                 defaultValue={post.address}
                 required
+                disabled={isSubmitting}
               />
             </div>
             <div className="item description">
               <label>Description *</label>
-              <ReactQuill theme="snow" onChange={setValue} value={value} />
+              <ReactQuill 
+                theme="snow" 
+                onChange={setValue} 
+                value={value}
+                readOnly={isSubmitting}
+              />
             </div>
             <div className="item">
               <label htmlFor="city">Ville *</label>
@@ -123,6 +196,7 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 type="text"
                 defaultValue={post.city}
                 required
+                disabled={isSubmitting}
               />
             </div>
             <div className="item">
@@ -134,6 +208,7 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 defaultValue={post.bedroom}
                 required
                 min="0"
+                disabled={isSubmitting}
               />
             </div>
             <div className="item">
@@ -145,6 +220,7 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 defaultValue={post.bathroom}
                 required
                 min="0"
+                disabled={isSubmitting}
               />
             </div>
             <div className="item">
@@ -154,25 +230,27 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 name="type"
                 defaultValue={post.type}
                 required
+                disabled={isSubmitting}
               >
-                <option value="">Select type</option>
-                <option value="maison">Maison</option>
-                <option value="appartement">Appartement</option>
-                <option value="studio">Studio</option>
-                <option value="villa">Villa</option>
+                <option value="">Sélectionner un type</option>
+                <option value="buy">À vendre</option>
+                <option value="rent">À louer</option>
               </select>
             </div>
             <div className="item">
-              <label htmlFor="property">Property Type *</label>
+              <label htmlFor="property">Property *</label>
               <select
                 id="property"
                 name="property"
                 defaultValue={post.property}
                 required
+                disabled={isSubmitting}
               >
-                <option value="">Select property type</option>
-                <option value="rent">Rent</option>
-                <option value="sale">Sale</option>
+                <option value="">Sélectionner un type de propriété</option>
+                <option value="apartment">Appartement</option>
+                <option value="house">Maison</option>
+                <option value="condo">Condo</option>
+                <option value="land">Terrain</option>
               </select>
             </div>
             <div className="item">
@@ -182,6 +260,8 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 name="latitude"
                 type="text"
                 defaultValue={post.latitude}
+                placeholder="Ex: -2.897030"
+                disabled={isSubmitting}
               />
             </div>
             <div className="item">
@@ -191,41 +271,53 @@ function UpdatePostModal({ post, onClose, onUpdated }) {
                 name="longitude"
                 type="text"
                 defaultValue={post.longitude}
+                placeholder="Ex: 29.818039"
+                disabled={isSubmitting}
               />
             </div>
 
-            <button className="sendButton" type="submit">Mettre à jour</button>
-            {error && <span className="error">{error}</span>}
+            <button 
+              className="sendButton" 
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Mise à jour..." : "Mettre à jour"}
+            </button>
+            {error && <span className="error-message">{error}</span>}
           </form>
 
           <div className="sideContainer">
-            <div className="imageUploadSection">
-              <h4>Images *</h4>
-              {images.length === 0 && <p className="imageWarning">At least one image is required</p>}
-              <div className="imagePreview">
+            <div className="images-section">
+              <h4>Images * ({images.length})</h4>
+              {images.length === 0 && (
+                <p className="image-warning">Ajoutez au moins une image</p>
+              )}
+              <div className="image-grid">
                 {images.map((img, i) => (
-                  <div key={i} className="imageItem">
+                  <div key={i} className="image-item">
                     <img src={img} alt={`Preview ${i + 1}`} />
                     <button 
                       type="button" 
-                      className="removeImage"
-                      onClick={() => setImages(images.filter((_, index) => index !== i))}
+                      className="remove-image"
+                      onClick={() => !isSubmitting && setImages(images.filter((_, index) => index !== i))}
+                      disabled={isSubmitting}
                     >
                       ✖
                     </button>
                   </div>
                 ))}
               </div>
-              <UploadWidget
-                uwConfig={{
-                  multiple: true,
-                  cloudName: "lamadev",
-                  uploadPreset: "estate",
-                  folder: "posts",
-                }}
-                setState={setImages}
-              />
             </div>
+            <UploadWidget
+              uwConfig={{
+                multiple: true,
+                cloudName: "lamadev",
+                uploadPreset: "estate",
+                folder: "posts",
+              }}
+              setState={setImages}
+              disabled={isSubmitting}
+            />
           </div>
         </div>
       </div>
