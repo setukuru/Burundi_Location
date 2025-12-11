@@ -26,18 +26,16 @@ function Login() {
       // Update user context
       updateUser(res.data);
 
-      // Redirect normal users
+      // Redirect based on role
       if (res.data.role === "proprietaire") {
         navigate("/proprietaire/home");
-      } 
-      if (res.data.role === "admin") {
+      } else if (res.data.role === "admin") {
         navigate("/admin/dashboard");
       } else {
         // Default redirect for locataire or any other role
         navigate("/");
       }
 
-      // Admins will still log in; handle /admin/dashboard in protected route logic
     } catch (err) {
       console.error("Login error:", err);
 
